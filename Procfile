@@ -1,1 +1,1 @@
-web: node apps/server/dist/index.js
+web: pnpm start
