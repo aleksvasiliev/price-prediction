@@ -27,9 +27,9 @@ export const WalletButton: React.FC<WalletButtonProps> = ({
         animate={{ scale: 1, opacity: 1 }}
         className="flex items-center gap-2"
       >
-        <div className="bg-green-500 bg-opacity-20 border border-green-500 rounded-lg px-3 py-2 flex items-center gap-2">
+        <div className="bg-green-500 bg-opacity-20 border border-green-500 rounded-lg px-2 sm:px-3 py-1 sm:py-2 flex items-center gap-1 sm:gap-2">
           <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-          <span className="text-green-400 text-sm font-mono">
+          <span className="text-green-400 text-xs sm:text-sm font-mono">
             {formatAddress(address)}
           </span>
         </div>
@@ -37,7 +37,7 @@ export const WalletButton: React.FC<WalletButtonProps> = ({
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           onClick={onDisconnect}
-          className="bg-red-500 bg-opacity-20 border border-red-500 text-red-400 px-3 py-2 rounded-lg text-sm hover:bg-red-500 hover:bg-opacity-30 transition-colors"
+          className="bg-red-500 bg-opacity-20 border border-red-500 text-red-400 px-2 sm:px-3 py-1 sm:py-2 rounded-lg text-xs sm:text-sm hover:bg-red-500 hover:bg-opacity-30 transition-colors touch-manipulation"
         >
           Disconnect
         </motion.button>
@@ -54,8 +54,9 @@ export const WalletButton: React.FC<WalletButtonProps> = ({
         disabled={isConnecting}
         className={`
           bg-gradient-to-r from-orange-500 to-yellow-500 
-          text-white font-bold py-3 px-6 rounded-lg shadow-lg
-          flex items-center gap-2 min-w-[200px] justify-center
+          text-white font-bold py-2 sm:py-3 px-4 sm:px-6 rounded-lg shadow-lg
+          flex items-center gap-2 min-w-[160px] sm:min-w-[200px] justify-center
+          text-sm sm:text-base touch-manipulation
           ${isConnecting 
             ? 'opacity-50 cursor-not-allowed' 
             : 'hover:from-orange-600 hover:to-yellow-600 transform transition-all duration-200'
@@ -88,7 +89,7 @@ export const WalletButton: React.FC<WalletButtonProps> = ({
         </motion.div>
       )}
       
-      <p className="text-gray-400 text-sm text-center max-w-[300px]">
+      <p className="text-gray-400 text-xs sm:text-sm text-center max-w-[280px] sm:max-w-[300px] px-2 sm:px-0">
         Connect your wallet to save your progress and compete on the leaderboard
       </p>
     </div>

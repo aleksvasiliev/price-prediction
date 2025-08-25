@@ -11,17 +11,20 @@ interface SimplePriceChartProps {
 export const SimplePriceChart: React.FC<SimplePriceChartProps> = ({
   data,
   currentPrice,
-  width = 400,
-  height = 300,
+  width,
+  height,
 }) => {
+  // Use container dimensions or defaults - ensure they're numbers
+  const containerWidth = typeof width === 'number' ? width : 400;
+  const containerHeight = typeof height === 'number' ? height : 300;
+
   // Take last 60 data points for display
   const chartData = data.slice(-60);
   
   if (chartData.length < 2) {
     return (
       <div 
-        className="bg-gray-800 rounded-lg flex items-center justify-center"
-        style={{ width, height }}
+        className="bg-gray-800 rounded-lg flex items-center justify-center w-full h-full"
       >
         <div className="text-center text-white">
           <div className="text-3xl font-bold">${currentPrice.toFixed(2)}</div>
@@ -40,8 +43,8 @@ export const SimplePriceChart: React.FC<SimplePriceChartProps> = ({
   
   // Calculate dimensions for candlesticks
   const padding = 20;
-  const chartWidth = width - padding * 2;
-  const chartHeight = height - padding * 2;
+  const chartWidth = containerWidth - padding * 2;
+  const chartHeight = containerHeight - padding * 2;
   const candleWidth = Math.max(3, Math.min(8, chartWidth / chartData.length - 2));
   
   // Create candlestick elements
@@ -76,8 +79,7 @@ export const SimplePriceChart: React.FC<SimplePriceChartProps> = ({
 
   return (
     <div 
-      className="bg-gray-800 rounded-lg relative"
-      style={{ width, height }}
+      className="bg-gray-800 rounded-lg relative w-full h-full"
     >
       {/* Price Info */}
       <div className="absolute top-4 left-4 z-10 text-white">
@@ -89,7 +91,7 @@ export const SimplePriceChart: React.FC<SimplePriceChartProps> = ({
       </div>
 
       {/* Chart */}
-      <svg width={width} height={height} className="absolute inset-0">
+      <svg width="100%" height="100%" viewBox={`0 0 ${containerWidth} ${containerHeight}`} className="absolute inset-0">
         {/* Grid lines */}
         <defs>
           <pattern id="grid" width="40" height="30" patternUnits="userSpaceOnUse">

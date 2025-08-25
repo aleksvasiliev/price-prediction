@@ -20,6 +20,7 @@ export const GameScreen: React.FC<GameScreenProps> = ({
 }) => {
   const [timeLeft, setTimeLeft] = useState<number>(0);
   const [soundEnabled, setSoundEnabled] = useState(true);
+  const [tickSoundPlayed, setTickSoundPlayed] = useState(false);
   const { playWin, playLose, playTick, setEnabled } = useGameSounds();
 
   // Play sound effects based on result
@@ -43,9 +44,10 @@ export const GameScreen: React.FC<GameScreenProps> = ({
       const endTime = gameState.currentRound?.endTime ?? 0;
       const remaining = Math.max(0, Math.ceil((endTime - now) / 1000));
       
-      // Play tick sound on last 3 seconds
-      if (remaining <= 3 && remaining > 0 && timeLeft !== remaining) {
+      // Play tick sound once when entering last 3 seconds
+      if (remaining <= 3 && remaining > 0 && !tickSoundPlayed) {
         playTick();
+        setTickSoundPlayed(true);
       }
       
       setTimeLeft(remaining);
@@ -56,7 +58,14 @@ export const GameScreen: React.FC<GameScreenProps> = ({
     }, 100);
 
     return () => clearInterval(interval);
-  }, [gameState.currentRound]);
+  }, [gameState.currentRound, tickSoundPlayed]);
+
+  // Reset tick sound flag when new round starts
+  useEffect(() => {
+    if (gameState.currentRound?.isActive) {
+      setTickSoundPlayed(false);
+    }
+  }, [gameState.currentRound?.roundId]);
 
   const isChoiceDisabled = !gameState.currentRound?.isActive || 
                           gameState.playerChoice !== null ||
