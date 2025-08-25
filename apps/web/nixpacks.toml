@@ -1,5 +1,4 @@
-[providers]
-node = '18'
+providers = ['node']
 
 [phases.setup]
 nixPkgs = ['pnpm']
