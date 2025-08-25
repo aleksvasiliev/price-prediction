@@ -1,0 +1,8 @@
+[phases.build]
+cmds = ['cd ../.. && pnpm install --no-frozen-lockfile', 'cd ../.. && pnpm --filter web build']
+
+[start]
+cmd = 'npx serve dist -s -p $PORT'
+
+[variables]
+NODE_ENV = 'production'

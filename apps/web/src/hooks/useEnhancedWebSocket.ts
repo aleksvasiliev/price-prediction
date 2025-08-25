@@ -22,7 +22,7 @@ interface EnhancedWebSocketHook {
 
 export const useEnhancedWebSocket = (serverUrl?: string): EnhancedWebSocketHook => {
   const defaultUrl = import.meta.env.PROD 
-    ? `wss://${window.location.host}/ws`
+    ? 'wss://price-prediction-production-c3f1.up.railway.app/ws'
     : 'ws://localhost:3001/ws';
   const wsUrl = serverUrl || defaultUrl;
   const wsRef = useRef<WebSocket | null>(null);
