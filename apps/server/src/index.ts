@@ -18,6 +18,20 @@ const fastify = Fastify({ logger: true });
 // Register WebSocket plugin
 fastify.register(websocket);
 
+// Health check endpoint
+fastify.get('/', async (request, reply) => {
+  return { status: 'ok', message: 'BTC 10s Guess Server' };
+});
+
+// Health check endpoint
+fastify.get('/health', async (request, reply) => {
+  return { 
+    status: 'ok', 
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime() 
+  };
+});
+
 // Game state
 const csvStorage = new CSVStorage();
 // Use enhanced game engine with real prices (set to true for mock prices during development)
