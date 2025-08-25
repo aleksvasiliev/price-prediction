@@ -6,7 +6,6 @@
   "scripts": {
     "dev": "nodemon --exec ts-node src/index.ts",
     "build": "tsc",
-    "postbuild": "mkdir -p node_modules/@predictor && cp -r ../../packages/shared node_modules/@predictor/",
     "start": "node dist/index.js"
   },
   "keywords": [],
@@ -15,7 +14,7 @@
   "packageManager": "pnpm@10.14.0",
   "dependencies": {
     "@fastify/websocket": "^11.2.0",
-    "@predictor/shared": "workspace:*",
+    "@predictor/shared": "file:../../packages/shared",
     "cross-fetch": "^4.1.0",
     "fastify": "^5.5.0",
     "nanoid": "^3.3.7",
