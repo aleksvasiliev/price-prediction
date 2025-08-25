@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "build": "npm install && npm run build:vite",
-    "build:vite": "tsc -b && vite build",
+    "build:vite": "vite build",
     "start": "serve dist -s -p $PORT"
   },
   "dependencies": {

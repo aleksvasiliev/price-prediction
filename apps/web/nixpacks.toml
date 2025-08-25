@@ -4,6 +4,7 @@ NODE_ENV = 'production'
 [phases.build]
 cmds = [
   'cp package.railway.json package.json',
+  'cp tsconfig.railway.json tsconfig.app.json',
   'npm install',
   'npm run build'
 ]
