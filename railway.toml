@@ -1,0 +1,9 @@
+[build]
+builder = "nixpacks"
+
+[deploy]
+startCommand = "cd apps/server && node dist/index.js"
+
+[[deploy.environmentVariables]]
+name = "NODE_ENV"
+value = "production"
