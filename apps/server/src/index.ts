@@ -152,6 +152,8 @@ gameEngine.on('roundRecord', async (roundRecord: any) => {
 });
 
 gameEngine.on('roundResult', async (sessionId: string, event: RoundResultEvent) => {
+  console.log(`💰 Processing result for session ${sessionId}:`, event.data);
+  
   // Find client by session and send result
   const clientEntry = Array.from(clients.entries()).find(
     ([_, client]) => client.sessionId === sessionId
@@ -161,11 +163,16 @@ gameEngine.on('roundResult', async (sessionId: string, event: RoundResultEvent) 
     const [clientId, client] = clientEntry;
     const session = sessionManager.getSession(sessionId);
     
-    if (!session) return;
+    if (!session) {
+      console.log(`❌ Session ${sessionId} not found`);
+      return;
+    }
     
     // Update session points
     const totalPoints = sessionManager.addPoints(sessionId, event.data.pointsDelta);
     event.data.totalPoints = totalPoints;
+    
+    console.log(`✅ Updated points for ${sessionId}: +${event.data.pointsDelta} = ${totalPoints} total`);
     
     // Save to CSV if connected wallet
     if (session.wallet) {

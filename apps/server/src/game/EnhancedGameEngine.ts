@@ -141,14 +141,21 @@ export class EnhancedGameEngine extends EventEmitter {
         pointsDelta = 0;
       }
 
+      console.log(`🎯 Player ${identity}: ${choice} prediction, P0=${round.p0}, P1=${p1} -> ${result} (+${pointsDelta} pts)`);
+
       // Emit round result for this player
-      this.emit('roundResult', {
-        identity,
-        roundId,
-        result,
-        pointsDelta,
-        p1,
-      });
+      const roundResultEvent: RoundResultEvent = {
+        type: 'ROUND_RESULT',
+        data: {
+          roundId,
+          p1,
+          result,
+          pointsDelta,
+          totalPoints: 0, // Will be updated by session manager
+        },
+      };
+
+      this.emit('roundResult', identity, roundResultEvent);
 
       // Create round record for storage
       const roundRecord: RoundRecord = {

@@ -94,6 +94,8 @@ export const useEnhancedWebSocket = (serverUrl: string = 'ws://localhost:3001/ws
 
             case 'ROUND_RESULT':
               const { result, pointsDelta, totalPoints: newTotal } = message.data;
+              console.log(`🎯 Round result received: ${result}, +${pointsDelta} pts, total: ${newTotal}`);
+              
               setLastResult(result);
               setTotalPoints(newTotal);
               
