@@ -21,7 +21,7 @@ fastify.register(websocket);
 // Game state
 const csvStorage = new CSVStorage();
 // Use enhanced game engine with real prices (set to true for mock prices during development)
-const gameEngine = new EnhancedGameEngine(true);  // Set to false for real Binance prices
+const gameEngine = new EnhancedGameEngine(false);  // Set to false for real Binance prices
 const sessionManager = new SessionManager();
 
 // Connected clients
@@ -49,6 +49,15 @@ fastify.register(async function (fastify) {
         },
       };
       connection.send(JSON.stringify(roundStartEvent));
+    }
+
+    // Send historical candlestick data to new client
+    const candlestickHistory = gameEngine.getCandlestickHistory();
+    if (candlestickHistory.length > 0) {
+      connection.send(JSON.stringify({
+        type: 'CANDLESTICK_HISTORY',
+        data: candlestickHistory
+      }));
     }
 
     connection.on('message', (message: Buffer) => {
@@ -123,6 +132,14 @@ gameEngine.on('roundStart', (event: RoundStartEvent) => {
 gameEngine.on('priceUpdate', (event: any) => {
   // Broadcast real-time price updates to all clients
   broadcast(event);
+});
+
+// Candlestick history broadcasting
+gameEngine.on('candlestickHistory', (candlesticks: any[]) => {
+  broadcast({
+    type: 'CANDLESTICK_HISTORY',
+    data: candlesticks
+  });
 });
 
 // Round record logging

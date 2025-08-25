@@ -3,7 +3,8 @@ import type {
   ServerToClientEvent, 
   ClientToServerEvent, 
   GameState,
-  PriceCandleData
+  PriceCandleData,
+  CandlestickHistoryEvent
 } from '@predictor/shared';
 import { ROUND_DURATION_MS } from '@predictor/shared';
 
@@ -47,9 +48,15 @@ export const useEnhancedWebSocket = (serverUrl: string = 'ws://localhost:3001/ws
   }, []);
 
   const connect = useCallback(() => {
-    if (wsRef.current?.readyState === WebSocket.OPEN) return;
+    // Prevent multiple connections
+    if (wsRef.current && 
+        (wsRef.current.readyState === WebSocket.OPEN || 
+         wsRef.current.readyState === WebSocket.CONNECTING)) {
+      return;
+    }
 
     try {
+      console.log('🔌 Connecting to WebSocket...');
       const ws = new WebSocket(serverUrl);
       wsRef.current = ws;
 
@@ -149,6 +156,18 @@ export const useEnhancedWebSocket = (serverUrl: string = 'ws://localhost:3001/ws
               });
               break;
 
+            case 'CANDLESTICK_HISTORY':
+              console.log('📊 Received candlestick history:', message.data.length, 'candles');
+              const historyData: PriceCandleData[] = message.data.map((candle: any) => ({
+                time: Math.floor(candle.time / 1000), // Convert to seconds for chart
+                open: candle.open,
+                high: candle.high,
+                low: candle.low,
+                close: candle.close,
+              }));
+              setPriceHistory(historyData);
+              break;
+
             case 'WALLET_CONNECTED':
               setGameState(prev => ({
                 ...prev,
@@ -169,19 +188,20 @@ export const useEnhancedWebSocket = (serverUrl: string = 'ws://localhost:3001/ws
         }
       };
 
-      ws.onclose = () => {
-        console.log('❌ Disconnected from game server');
+      ws.onclose = (event) => {
+        console.log('❌ Disconnected from game server', event.code, event.reason);
         setIsConnected(false);
         setGameState(prev => ({
           ...prev,
           isConnected: false,
         }));
 
-        // Attempt to reconnect
-        if (reconnectAttempts.current < maxReconnectAttempts) {
+        // Only reconnect if it wasn't a manual close
+        if (event.code !== 1000 && reconnectAttempts.current < maxReconnectAttempts) {
           reconnectAttempts.current++;
-          console.log(`🔄 Reconnecting... (${reconnectAttempts.current}/${maxReconnectAttempts})`);
-          setTimeout(connect, 2000 * reconnectAttempts.current);
+          const delay = Math.min(1000 * Math.pow(2, reconnectAttempts.current), 10000);
+          console.log(`🔄 Reconnecting... (${reconnectAttempts.current}/${maxReconnectAttempts}) in ${delay}ms`);
+          setTimeout(connect, delay);
         }
       };
 
@@ -196,8 +216,10 @@ export const useEnhancedWebSocket = (serverUrl: string = 'ws://localhost:3001/ws
 
   const disconnect = useCallback(() => {
     if (wsRef.current) {
-      wsRef.current.close();
+      console.log('🔌 Manually disconnecting WebSocket');
+      wsRef.current.close(1000, 'Manual disconnect');
       wsRef.current = null;
+      setIsConnected(false);
     }
   }, []);
 

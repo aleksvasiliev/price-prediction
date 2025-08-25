@@ -1,10 +1,20 @@
 import WebSocket from 'ws';
 import { EventEmitter } from 'events';
+import https from 'https';
 
 export interface PriceData {
   symbol: string;
   price: number;
   timestamp: number;
+  open: number;
+  high: number;
+  low: number;
+  close: number;
+  volume: number;
+}
+
+export interface CandlestickData {
+  time: number;
   open: number;
   high: number;
   low: number;
@@ -18,6 +28,7 @@ export class BinancePriceService extends EventEmitter {
   private maxReconnectAttempts = 5;
   private currentPrice = 50000; // Fallback price
   private priceHistory: PriceData[] = [];
+  private candlestickHistory: CandlestickData[] = [];
   private mockMode = false;
 
   constructor(mockMode = false) {
@@ -26,8 +37,64 @@ export class BinancePriceService extends EventEmitter {
     if (mockMode) {
       this.startMockPriceGenerator();
     } else {
-      this.connect();
+      this.fetchHistoricalData().then(() => {
+        this.connect();
+      });
     }
+  }
+
+  private async fetchHistoricalData(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      const options = {
+        hostname: 'api.binance.com',
+        path: '/api/v3/klines?symbol=BTCUSDT&interval=1m&limit=100',
+        method: 'GET'
+      };
+
+      const req = https.request(options, (res) => {
+        let data = '';
+        
+        res.on('data', (chunk) => {
+          data += chunk;
+        });
+        
+        res.on('end', () => {
+          try {
+            const klines = JSON.parse(data);
+            this.candlestickHistory = klines.map((kline: any[]) => ({
+              time: kline[0], // Open time
+              open: parseFloat(kline[1]),
+              high: parseFloat(kline[2]),
+              low: parseFloat(kline[3]),
+              close: parseFloat(kline[4]),
+              volume: parseFloat(kline[5])
+            }));
+            
+            console.log(`📊 Loaded ${this.candlestickHistory.length} historical candlesticks`);
+            
+            // Set current price from latest candle
+            if (this.candlestickHistory.length > 0) {
+              const latest = this.candlestickHistory[this.candlestickHistory.length - 1];
+              this.currentPrice = latest.close;
+            }
+            
+            // Emit initial candlestick data
+            this.emit('candlestickHistory', this.candlestickHistory);
+            resolve();
+          } catch (error) {
+            console.error('❌ Error parsing historical data:', error);
+            reject(error);
+          }
+        });
+      });
+
+      req.on('error', (error) => {
+        console.error('❌ Error fetching historical data:', error);
+        reject(error);
+      });
+
+      req.end();
+    });
   }
 
   private connect() {
@@ -130,6 +197,10 @@ export class BinancePriceService extends EventEmitter {
 
   public getPriceHistory(): PriceData[] {
     return [...this.priceHistory];
+  }
+
+  public getCandlestickHistory(): CandlestickData[] {
+    return [...this.candlestickHistory];
   }
 
   public disconnect() {

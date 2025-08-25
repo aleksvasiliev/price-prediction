@@ -75,6 +75,18 @@ export interface PriceUpdateEvent {
   };
 }
 
+export interface CandlestickHistoryEvent {
+  type: 'CANDLESTICK_HISTORY';
+  data: {
+    time: number;
+    open: number;
+    high: number;
+    low: number;
+    close: number;
+    volume: number;
+  }[];
+}
+
 export interface WalletConnectEvent {
   type: 'WALLET_CONNECT';
   data: {
@@ -91,7 +103,8 @@ export type ServerToClientEvent =
   | LeaderboardEvent
   | WalletConnectedEvent
   | AskTelegramEvent
-  | PriceUpdateEvent;
+  | PriceUpdateEvent
+  | CandlestickHistoryEvent;
 
 export type ClientToServerEvent = 
   | ChoiceSubmitEvent

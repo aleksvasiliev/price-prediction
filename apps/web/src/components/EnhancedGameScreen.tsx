@@ -4,7 +4,7 @@ import type { GameState, PriceCandleData } from '@predictor/shared';
 import { useGameSounds } from '../hooks/useGameSounds';
 import { useWallet } from '../hooks/useWallet';
 import { WalletButton } from './WalletButton';
-import { CandlestickChart } from './CandlestickChart';
+import { SimplePriceChart } from './SimplePriceChart';
 
 interface EnhancedGameScreenProps {
   gameState: GameState;
@@ -175,7 +175,7 @@ export const EnhancedGameScreen: React.FC<EnhancedGameScreenProps> = ({
 
           <div className="bg-black bg-opacity-30 rounded-lg p-4">
             {priceHistory.length > 0 ? (
-              <CandlestickChart
+              <SimplePriceChart
                 data={priceHistory}
                 currentPrice={currentPrice}
                 width={Math.min(600, window.innerWidth - 100)}

@@ -48,6 +48,11 @@ export class EnhancedGameEngine extends EventEmitter {
       } as PriceUpdateEvent);
     });
 
+    // Handle historical candlestick data
+    this.priceService.on('candlestickHistory', (candlesticks: any[]) => {
+      this.emit('candlestickHistory', candlesticks);
+    });
+
     this.startNewRound();
   }
 
@@ -178,6 +183,10 @@ export class EnhancedGameEngine extends EventEmitter {
 
   public getPriceHistory() {
     return this.priceService.getPriceHistory();
+  }
+
+  public getCandlestickHistory() {
+    return this.priceService.getCandlestickHistory();
   }
 
   public disconnect() {
