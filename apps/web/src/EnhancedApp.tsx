@@ -1,4 +1,4 @@
-import React from 'react';
+// import React from 'react';
 import { EnhancedGameScreen } from './components/EnhancedGameScreen';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { useEnhancedWebSocket } from './hooks/useEnhancedWebSocket';

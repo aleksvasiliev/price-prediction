@@ -91,7 +91,7 @@ export const useWallet = () => {
         const origin = window.location.origin;
         const message = new SiweMessage({
           domain,
-          address: ethers.utils?.getAddress ? ethers.utils.getAddress(address) : ethers.getAddress(address), // Ensure proper checksum
+          address: ethers.getAddress(address), // Ensure proper checksum
           statement: 'Sign in to BTC 10s Guess to save your progress and compete on the leaderboard.',
           uri: origin,
           version: '1',

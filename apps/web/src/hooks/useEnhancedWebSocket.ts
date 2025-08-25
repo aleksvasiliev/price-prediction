@@ -3,8 +3,7 @@ import type {
   ServerToClientEvent, 
   ClientToServerEvent, 
   GameState,
-  PriceCandleData,
-  CandlestickHistoryEvent
+  PriceCandleData
 } from '../shared';
 import { ROUND_DURATION_MS } from '../shared';
 
@@ -100,7 +99,7 @@ export const useEnhancedWebSocket = (serverUrl?: string): EnhancedWebSocketHook 
               const { result, pointsDelta, totalPoints: newTotal } = message.data;
               console.log(`🎯 Round result received: ${result}, +${pointsDelta} pts, total: ${newTotal}`);
               
-              setLastResult(result);
+              setLastResult(result === 'VOID' ? null : result);
               setTotalPoints(newTotal);
               
               setGameState(prev => ({

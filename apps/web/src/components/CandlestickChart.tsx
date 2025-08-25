@@ -50,16 +50,16 @@ export const CandlestickChart: React.FC<CandlestickChartProps> = ({
     });
 
     // Add candlestick series (v5 API)
-    const candlestickSeries = chart.addCandlestickSeries({
-      upColor: '#26a69a',
-      downColor: '#ef5350',
-      borderVisible: false,
-      wickUpColor: '#26a69a',
-      wickDownColor: '#ef5350',
-    });
+    // const candlestickSeries = chart.addCandlestickSeries({
+    //   upColor: '#26a69a',
+    //   downColor: '#ef5350',
+    //   borderVisible: false,
+    //   wickUpColor: '#26a69a',
+    //   wickDownColor: '#ef5350',
+    // });
 
     chartRef.current = chart;
-    seriesRef.current = candlestickSeries;
+    // seriesRef.current = candlestickSeries;
 
     // Set initial data if available
     if (data.length > 0) {
@@ -75,7 +75,7 @@ export const CandlestickChart: React.FC<CandlestickChartProps> = ({
         );
 
         if (chartData.length > 0) {
-          candlestickSeries.setData(chartData);
+          // candlestickSeries.setData(chartData);
         }
       } catch (error) {
         console.warn('Error setting chart data:', error);

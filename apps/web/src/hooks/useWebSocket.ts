@@ -4,7 +4,7 @@ import type {
   ClientToServerEvent, 
   GameState 
 } from '../shared';
-import { ROUND_DURATION_MS } from '../shared';
+// import { ROUND_DURATION_MS } from '../shared';
 
 interface WebSocketHook {
   gameState: GameState;
@@ -66,7 +66,7 @@ export const useWebSocket = (serverUrl: string = 'ws://localhost:3001/ws'): WebS
               break;
 
             case 'ROUND_RESULT':
-              const { p1, result, pointsDelta, totalPoints } = message.data;
+              const { result, pointsDelta, totalPoints } = message.data;
               setGameState(prev => ({
                 ...prev,
                 playerPoints: totalPoints,
@@ -77,7 +77,7 @@ export const useWebSocket = (serverUrl: string = 'ws://localhost:3001/ws'): WebS
               }));
 
               // Show result notification
-              setLastResult(result);
+              setLastResult(result === 'VOID' ? null : result);
               setTimeout(() => setLastResult(null), 3000); // Clear after 3 seconds
               
               console.log(`Round result: ${result}, Points: +${pointsDelta}, Total: ${totalPoints}`);

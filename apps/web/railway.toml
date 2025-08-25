@@ -1,9 +1,0 @@
-[build]
-builder = "nixpacks"
-buildCommand = "cd ../.. && pnpm install --no-frozen-lockfile && pnpm --filter web build"
-
-[deploy]
-startCommand = "npx serve dist -s -p $PORT"
-healthcheckPath = "/"
-healthcheckTimeout = 100
-restartPolicyType = "always"
