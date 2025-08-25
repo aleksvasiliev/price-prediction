@@ -31,7 +31,9 @@ export const useGameSounds = (): GameSounds => {
     oscillator.frequency.setValueAtTime(frequency, ctx.currentTime);
     oscillator.type = type;
 
-    gainNode.gain.setValueAtTime(0.3, ctx.currentTime);
+    // Softer volume for tick sounds
+    const volume = type === 'sine' && frequency > 800 ? 0.15 : 0.3;
+    gainNode.gain.setValueAtTime(volume, ctx.currentTime);
     gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + duration);
 
     oscillator.start(ctx.currentTime);
@@ -55,7 +57,9 @@ export const useGameSounds = (): GameSounds => {
   }, [playTone]);
 
   const playTick = useCallback(() => {
-    playTone(800, 0.1, 'square');
+    // Gentle two-tone chime
+    playTone(880, 0.1, 'sine'); // A5 note
+    setTimeout(() => playTone(1046.5, 0.1, 'sine'), 50); // C6 note
   }, [playTone]);
 
   const setEnabled = useCallback((enabled: boolean) => {

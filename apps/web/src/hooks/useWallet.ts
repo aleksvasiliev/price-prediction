@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { MetaMaskSDK } from '@metamask/sdk';
 import { ethers } from 'ethers';
-import { SiweMessage } from 'siwe';
+import { SiweMessage, generateNonce } from 'siwe';
 
 export interface WalletState {
   isConnected: boolean;
@@ -91,15 +91,18 @@ export const useWallet = () => {
         const origin = window.location.origin;
         const message = new SiweMessage({
           domain,
-          address,
-          statement: 'Sign in to BTC 10s Guess',
+          address: ethers.utils?.getAddress ? ethers.utils.getAddress(address) : ethers.getAddress(address), // Ensure proper checksum
+          statement: 'Sign in to BTC 10s Guess to save your progress and compete on the leaderboard.',
           uri: origin,
           version: '1',
           chainId: 1,
-          nonce: Math.random().toString(36).substring(7),
+          nonce: generateNonce(),
+          issuedAt: new Date().toISOString(),
+          expirationTime: new Date(Date.now() + 60000).toISOString(), // 1 minute
         });
 
         const messageString = message.prepareMessage();
+        console.log('🔐 SIWE Message:', messageString);
 
         // Request signature
         const provider = sdk.getProvider();
@@ -107,6 +110,8 @@ export const useWallet = () => {
           method: 'personal_sign',
           params: [messageString, address],
         }) as string;
+
+        console.log('✅ Signature received:', signature.slice(0, 10) + '...');
 
         setWalletState({
           isConnected: true,
@@ -126,11 +131,19 @@ export const useWallet = () => {
       }
     } catch (error: any) {
       console.error('Failed to connect wallet:', error);
+      
+      let errorMessage = 'Failed to connect wallet';
+      if (error.message?.includes('User rejected')) {
+        errorMessage = 'Connection cancelled by user';
+      } else if (error.message?.includes('SIWE') || error.message?.includes('invalid')) {
+        errorMessage = 'Invalid signature format';
+      }
+      
       setWalletState({
         isConnected: false,
         address: null,
         isConnecting: false,
-        error: error.message || 'Failed to connect wallet',
+        error: errorMessage,
       });
       return null;
     }
