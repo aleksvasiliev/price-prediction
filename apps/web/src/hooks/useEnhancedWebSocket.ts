@@ -20,7 +20,11 @@ interface EnhancedWebSocketHook {
   totalPoints: number;
 }
 
-export const useEnhancedWebSocket = (serverUrl: string = 'ws://localhost:3001/ws'): EnhancedWebSocketHook => {
+export const useEnhancedWebSocket = (serverUrl?: string): EnhancedWebSocketHook => {
+  const defaultUrl = import.meta.env.PROD 
+    ? `wss://${window.location.host}/ws`
+    : 'ws://localhost:3001/ws';
+  const wsUrl = serverUrl || defaultUrl;
   const wsRef = useRef<WebSocket | null>(null);
   const reconnectAttempts = useRef(0);
   const maxReconnectAttempts = 5;
@@ -57,7 +61,7 @@ export const useEnhancedWebSocket = (serverUrl: string = 'ws://localhost:3001/ws
 
     try {
       console.log('🔌 Connecting to WebSocket...');
-      const ws = new WebSocket(serverUrl);
+      const ws = new WebSocket(wsUrl);
       wsRef.current = ws;
 
       ws.onopen = () => {
@@ -215,7 +219,7 @@ export const useEnhancedWebSocket = (serverUrl: string = 'ws://localhost:3001/ws
     } catch (error) {
       console.error('❌ Failed to connect to WebSocket:', error);
     }
-  }, [serverUrl]);
+  }, [wsUrl]);
 
   const disconnect = useCallback(() => {
     if (wsRef.current) {

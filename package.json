@@ -2,10 +2,11 @@
   "name": "predictor",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "apps/server/dist/index.js",
   "scripts": {
     "dev": "concurrently \"pnpm --filter @predictor/shared dev\" \"pnpm --filter web dev\" \"pnpm --filter server dev\"",
-    "build": "pnpm --filter @predictor/shared build && pnpm --filter web build && pnpm --filter server build",
+    "build": "pnpm --filter @predictor/shared build && pnpm --filter server build",
+    "start": "cd apps/server && pnpm start",
     "start:web": "pnpm --filter web dev",
     "start:server": "pnpm --filter server dev"
   },

@@ -1,0 +1,43 @@
+name: btc-10s-guess
+region: fra
+
+services:
+- name: backend
+  source_dir: /
+  github:
+    repo: aleksvasiliev/price-prediction
+    branch: main
+    deploy_on_push: true
+  run_command: npm run start
+  build_command: |
+    npm install -g pnpm@latest
+    pnpm install
+    pnpm build
+  environment_slug: node-js
+  instance_count: 1
+  instance_size_slug: basic-xxs
+  http_port: 8080
+  routes:
+  - path: /api
+  - path: /ws
+  envs:
+  - key: NODE_ENV
+    value: production
+  - key: PORT
+    value: "8080"
+
+static_sites:
+- name: frontend
+  source_dir: /apps/web
+  github:
+    repo: aleksvasiliev/price-prediction
+    branch: main
+    deploy_on_push: true
+  build_command: |
+    npm install -g pnpm@latest
+    cd /workspace
+    pnpm install
+    pnpm --filter web build
+  output_dir: /dist
+  routes:
+  - path: /

@@ -1,0 +1,27 @@
+name: btc-10s-guess
+region: fra
+
+services:
+- name: fullstack-app
+  source_dir: /
+  github:
+    repo: aleksvasiliev/price-prediction
+    branch: main
+    deploy_on_push: true
+  run_command: npm start
+  build_command: |
+    npm install
+    cd packages/shared && npm run build && cd ../..
+    cd apps/server && npm install && npm run build && cd ../..
+    cd apps/web && npm install && npm run build && cd ../..
+  environment_slug: node-js
+  instance_count: 1
+  instance_size_slug: basic-xxs
+  http_port: 8080
+  routes:
+  - path: /
+  envs:
+  - key: NODE_ENV
+    value: production
+  - key: PORT
+    value: "8080"
