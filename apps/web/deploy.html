@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🪙 BTC 10s Guess</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .container {
+            max-width: 400px;
+            width: 100%;
+        }
+        .card {
+            background: rgba(255,255,255,0.1);
+            padding: 2rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        .price {
+            font-size: 2rem;
+            font-weight: bold;
+            margin: 1rem 0;
+        }
+        .countdown {
+            font-size: 1.5rem;
+            margin: 1rem 0;
+        }
+        .buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin: 1rem 0;
+        }
+        .btn {
+            padding: 1rem 2rem;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            color: white;
+            font-weight: bold;
+        }
+        .btn-up {
+            background: #16a34a;
+        }
+        .btn-down {
+            background: #b91c1c;
+        }
+        .btn:hover {
+            opacity: 0.8;
+        }
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .status {
+            margin: 1rem 0;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 style="text-align: center; font-size: 2.5rem; margin-bottom: 2rem;">
+            🪙 BTC 10s Guess
+        </h1>
+        
+        <div class="card">
+            <h2 style="margin: 0 0 1rem 0;">BTC/USDT</h2>
+            <div class="price" id="price">$50,000.00</div>
+            <div class="countdown" id="countdown">⏰ 10s</div>
+        </div>
+
+        <div class="card">
+            <h3 style="margin: 0 0 1rem 0;">Will BTC go UP or DOWN?</h3>
+            <div class="buttons">
+                <button class="btn btn-up" id="btnUp" onclick="makeChoice('UP')">
+                    📈 UP
+                </button>
+                <button class="btn btn-down" id="btnDown" onclick="makeChoice('DOWN')">
+                    📉 DOWN
+                </button>
+            </div>
+            <div class="status" id="status"></div>
+        </div>
+
+        <div class="card">
+            💰 Points: <span id="points">0</span>
+        </div>
+
+        <div style="text-align: center; margin-top: 2rem; opacity: 0.8; font-size: 0.9rem;">
+            🚀 Backend: <a href="https://price-prediction-production-c3f1.up.railway.app" 
+               style="color: #87CEEB;">price-prediction-production-c3f1.up.railway.app</a>
+        </div>
+    </div>
+
+    <script>
+        let price = 50000;
+        let countdown = 10;
+        let choice = null;
+        let points = 0;
+        let gameInterval;
+
+        function updateDisplay() {
+            document.getElementById('price').textContent = '$' + price.toLocaleString() + '.00';
+            document.getElementById('countdown').textContent = '⏰ ' + countdown + 's';
+            document.getElementById('points').textContent = points;
+            
+            const btnUp = document.getElementById('btnUp');
+            const btnDown = document.getElementById('btnDown');
+            
+            if (countdown <= 3 || choice) {
+                btnUp.disabled = true;
+                btnDown.disabled = true;
+            } else {
+                btnUp.disabled = false;
+                btnDown.disabled = false;
+            }
+            
+            if (choice) {
+                document.getElementById('status').textContent = 'Your choice: ' + choice + ' 🎯';
+            } else {
+                document.getElementById('status').textContent = '';
+            }
+        }
+
+        function makeChoice(newChoice) {
+            if (countdown > 3 && !choice) {
+                choice = newChoice;
+                points += 10;
+                updateDisplay();
+            }
+        }
+
+        function startNewRound() {
+            // Simulate price change
+            price += (Math.random() - 0.5) * 2000;
+            price = Math.max(1000, Math.min(100000, price)); // Keep price reasonable
+            
+            countdown = 10;
+            choice = null;
+            updateDisplay();
+        }
+
+        function tick() {
+            countdown--;
+            if (countdown <= 0) {
+                startNewRound();
+            }
+            updateDisplay();
+        }
+
+        // Start the game
+        updateDisplay();
+        gameInterval = setInterval(tick, 1000);
+
+        // Try to connect to WebSocket (optional)
+        try {
+            const ws = new WebSocket('wss://price-prediction-production-c3f1.up.railway.app/ws');
+            ws.onopen = function() {
+                console.log('Connected to backend! 🎉');
+            };
+            ws.onmessage = function(event) {
+                const data = JSON.parse(event.data);
+                console.log('Received:', data);
+                // Handle real data from backend
+            };
+            ws.onerror = function() {
+                console.log('Backend offline, using demo mode 🎮');
+            };
+        } catch (e) {
+            console.log('Demo mode active 🎮');
+        }
+    </script>
+</body>
+</html>

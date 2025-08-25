@@ -89,3 +89,4 @@ data/
 
 # Vite cache
 .vite/
+.vercel
