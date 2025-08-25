@@ -295,11 +295,18 @@ setInterval(async () => {
 // Start server
 const start = async () => {
   try {
+    console.log('🔥 Starting server...');
+    console.log('📁 Current directory:', process.cwd());
+    console.log('🌍 Environment:', process.env.NODE_ENV);
+    
     const port = parseInt(process.env.PORT || '3001');
+    console.log(`📡 Attempting to bind to port: ${port}`);
+    
     await fastify.listen({ port, host: '0.0.0.0' });
     console.log(`🚀 Server running on http://localhost:${port}`);
     console.log(`🎮 Game engine started`);
   } catch (err) {
+    console.error('💥 Server startup failed:', err);
     fastify.log.error(err);
     process.exit(1);
   }
