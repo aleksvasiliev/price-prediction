@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import * as lockfile from 'proper-lockfile';
-import { PlayerRecord, SessionRecord, RoundRecord } from '@predictor/shared';
+import { PlayerRecord, SessionRecord, RoundRecord } from '../shared';
 
 export class CSVStorage {
   private dataDir: string;
