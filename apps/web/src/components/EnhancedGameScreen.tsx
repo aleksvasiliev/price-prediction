@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import type { GameState, PriceCandleData } from '@predictor/shared';
+import type { GameState, PriceCandleData } from '../shared';
 import { useGameSounds } from '../hooks/useGameSounds';
 import { useWallet } from '../hooks/useWallet';
 import { WalletButton } from './WalletButton';

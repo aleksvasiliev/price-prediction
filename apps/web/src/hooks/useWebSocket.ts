@@ -3,8 +3,8 @@ import type {
   ServerToClientEvent, 
   ClientToServerEvent, 
   GameState 
-} from '@predictor/shared';
-import { ROUND_DURATION_MS } from '@predictor/shared';
+} from '../shared';
+import { ROUND_DURATION_MS } from '../shared';
 
 interface WebSocketHook {
   gameState: GameState;

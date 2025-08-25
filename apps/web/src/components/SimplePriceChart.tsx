@@ -1,5 +1,5 @@
 import React from 'react';
-import type { PriceCandleData } from '@predictor/shared';
+import type { PriceCandleData } from '../shared';
 
 interface SimplePriceChartProps {
   data: PriceCandleData[];

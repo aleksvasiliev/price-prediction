@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { createChart, ColorType } from 'lightweight-charts';
-import type { PriceCandleData } from '@predictor/shared';
+import type { PriceCandleData } from '../shared';
 
 interface CandlestickChartProps {
   data: PriceCandleData[];

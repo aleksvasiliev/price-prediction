@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import type { GameState } from '@predictor/shared';
+import type { GameState } from '../shared';
 import { useGameSounds } from '../hooks/useGameSounds';
 
 interface GameScreenProps {

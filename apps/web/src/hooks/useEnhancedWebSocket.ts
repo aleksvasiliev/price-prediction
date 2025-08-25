@@ -5,8 +5,8 @@ import type {
   GameState,
   PriceCandleData,
   CandlestickHistoryEvent
-} from '@predictor/shared';
-import { ROUND_DURATION_MS } from '@predictor/shared';
+} from '../shared';
+import { ROUND_DURATION_MS } from '../shared';
 
 interface EnhancedWebSocketHook {
   gameState: GameState;
