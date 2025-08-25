@@ -57,10 +57,33 @@ export const useGameSounds = (): GameSounds => {
   }, [playTone]);
 
   const playTick = useCallback(() => {
-    // Gentle two-tone chime
-    playTone(880, 0.1, 'sine'); // A5 note
-    setTimeout(() => playTone(1046.5, 0.1, 'sine'), 50); // C6 note
-  }, [playTone]);
+    // Modern UI notification sound - quick digital blip
+    const ctx = initAudioContext();
+    const oscillator = ctx.createOscillator();
+    const gainNode = ctx.createGain();
+    const filterNode = ctx.createBiquadFilter();
+
+    oscillator.connect(filterNode);
+    filterNode.connect(gainNode);
+    gainNode.connect(ctx.destination);
+
+    // Quick frequency sweep from high to low
+    oscillator.frequency.setValueAtTime(1200, ctx.currentTime);
+    oscillator.frequency.exponentialRampToValueAtTime(800, ctx.currentTime + 0.05);
+    oscillator.type = 'square';
+
+    // Low-pass filter for smoother sound
+    filterNode.type = 'lowpass';
+    filterNode.frequency.setValueAtTime(2000, ctx.currentTime);
+    filterNode.frequency.exponentialRampToValueAtTime(1000, ctx.currentTime + 0.05);
+
+    // Quick envelope
+    gainNode.gain.setValueAtTime(0.2, ctx.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.08);
+
+    oscillator.start(ctx.currentTime);
+    oscillator.stop(ctx.currentTime + 0.08);
+  }, [playTone, initAudioContext]);
 
   const setEnabled = useCallback((enabled: boolean) => {
     soundEnabled.current = enabled;

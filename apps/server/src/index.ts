@@ -89,19 +89,27 @@ fastify.register(async function (fastify) {
           
           if (!client) return;
           
+          (async () => {
           try {
             // TODO: Verify SIWE signature here
             // For now, just accept the wallet connection
             console.log(`Wallet connected: ${address} for session ${client.sessionId}`);
             
-            // Update session with wallet address
-            sessionManager.connectWallet(client.sessionId, address);
+            // Update session with wallet address (may return different session if merged)
+            const updatedSession = await sessionManager.connectWallet(client.sessionId, address, csvStorage);
             
+            if (updatedSession && updatedSession.id !== client.sessionId) {
+              // Session was merged, update client mapping
+              console.log(`🔄 Session merged: ${client.sessionId} -> ${updatedSession.id}`);
+              client.sessionId = updatedSession.id;
+            }
+            
+            const currentSessionId = updatedSession ? updatedSession.id : client.sessionId;
             const walletConnectedEvent = {
               type: 'WALLET_CONNECTED',
               data: {
                 wallet: address,
-                totalPoints: sessionManager.getPoints(client.sessionId),
+                totalPoints: sessionManager.getPoints(currentSessionId),
               },
             };
             
@@ -109,6 +117,7 @@ fastify.register(async function (fastify) {
           } catch (error) {
             console.error('Wallet connection failed:', error);
           }
+          })();
         }
       } catch (error) {
         console.error('Error processing WebSocket message:', error);

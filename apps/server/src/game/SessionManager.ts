@@ -31,7 +31,7 @@ export class SessionManager {
     return session;
   }
 
-  public connectWallet(sessionId: string, wallet: string): Session | null {
+  public async connectWallet(sessionId: string, wallet: string, csvStorage?: any): Promise<Session | null> {
     const session = this.sessions.get(sessionId);
     if (!session) {
       return null;
@@ -49,8 +49,21 @@ export class SessionManager {
         // Remove the guest session
         this.sessions.delete(sessionId);
         
-        console.log(`Merged guest session ${sessionId} with wallet session ${existingSessionId}`);
+        console.log(`💰 Merged guest points: ${session.tempPoints} + existing: ${existingSession.tempPoints - session.tempPoints} = ${existingSession.tempPoints}`);
         return existingSession;
+      }
+    }
+
+    // Load existing points from CSV if available
+    if (csvStorage) {
+      try {
+        const existingPlayer = await csvStorage.getPlayer(wallet);
+        if (existingPlayer) {
+          session.tempPoints += existingPlayer.points;
+          console.log(`💰 Loaded ${existingPlayer.points} points from CSV for wallet ${wallet}`);
+        }
+      } catch (error) {
+        console.log(`No existing points found for wallet ${wallet}`);
       }
     }
 
@@ -61,7 +74,7 @@ export class SessionManager {
     
     this.walletToSession.set(wallet, sessionId);
     
-    console.log(`Wallet connected to session ${sessionId}: ${wallet}`);
+    console.log(`💳 Wallet connected to session ${sessionId}: ${wallet} (${session.tempPoints} total points)`);
     return session;
   }
 

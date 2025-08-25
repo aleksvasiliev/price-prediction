@@ -171,6 +171,7 @@ export const useEnhancedWebSocket = (serverUrl: string = 'ws://localhost:3001/ws
               break;
 
             case 'WALLET_CONNECTED':
+              console.log(`🦊 Wallet connected: ${message.data.wallet}, Total points: ${message.data.totalPoints}`);
               setGameState(prev => ({
                 ...prev,
                 wallet: message.data.wallet,
