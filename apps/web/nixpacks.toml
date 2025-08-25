@@ -8,8 +8,9 @@ nixPkgs = ['nodejs_20']
 
 [phases.build]
 cmds = [
-  'cp package.railway.json package.json',
-  'cp tsconfig.railway.json tsconfig.app.json',
+  'cp package.simple.json package.json',
+  'cp tsconfig.simple.json tsconfig.app.json',
+  'cp vite.simple.config.ts vite.config.ts',
   'npm install',
   'npm run build'
 ]
