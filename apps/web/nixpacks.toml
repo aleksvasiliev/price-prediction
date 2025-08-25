@@ -11,6 +11,8 @@ cmds = [
   'cp package.simple.json package.json',
   'cp tsconfig.simple.json tsconfig.app.json',
   'cp vite.simple.config.ts vite.config.ts',
+  'cp postcss.simple.config.js postcss.config.js',
+  'cp index.simple.html index.html',
   'npm install',
   'npm run build'
 ]
