@@ -40,3 +40,4 @@ services:
     instance_size_slug: basic-xxs
     health_check:
       http_path: /health
+      port: 3001
