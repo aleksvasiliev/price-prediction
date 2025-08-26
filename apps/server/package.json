@@ -8,8 +8,8 @@
     "npm": "10.x"
   },
   "scripts": {
-    "build": "tsc",
-    "start": "node dist/index.js"
+    "build": "echo 'Starting TypeScript build...' && tsc && echo 'Build complete' && ls -la dist/",
+    "start": "echo 'Checking dist directory...' && ls -la dist/ && echo 'Starting app...' && node dist/index.js"
   },
   "keywords": ["bitcoin", "prediction", "game", "backend"],
   "author": "Aleksei Vasiliev",
