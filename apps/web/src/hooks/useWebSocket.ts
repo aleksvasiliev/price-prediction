@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
-import type { 
-  ServerToClientEvent, 
-  ClientToServerEvent, 
-  GameState 
-} from '@predictor/shared';
-import { ROUND_DURATION_MS } from '@predictor/shared';
+import type {
+  ServerToClientEvent,
+  ClientToServerEvent,
+  GameState
+} from '../shared';
+import { ROUND_DURATION_MS } from '../shared';
 
 interface WebSocketHook {
   gameState: GameState;

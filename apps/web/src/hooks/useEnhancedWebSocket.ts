@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
-import type { 
-  ServerToClientEvent, 
-  ClientToServerEvent, 
+import type {
+  ServerToClientEvent,
+  ClientToServerEvent,
   GameState,
   PriceCandleData,
   CandlestickHistoryEvent
-} from '@predictor/shared';
-import { ROUND_DURATION_MS } from '@predictor/shared';
+} from '../shared';
+import { ROUND_DURATION_MS } from '../shared';
 
 interface EnhancedWebSocketHook {
   gameState: GameState;

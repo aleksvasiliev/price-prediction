@@ -9,7 +9,7 @@ import {
   RoundResultEvent,
   RoundRecord,
   PriceUpdateEvent
-} from '@predictor/shared';
+} from './shared';
 import { BinancePriceService, PriceData } from '../services/BinancePriceService';
 
 export interface Round {

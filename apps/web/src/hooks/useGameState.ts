@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
-import type { GameState } from '@predictor/shared';
-import { ROUND_DURATION_MS } from '@predictor/shared';
+import type { GameState } from '../shared';
+import { ROUND_DURATION_MS } from '../shared';
 
 export const useGameState = () => {
   const [gameState, setGameState] = useState<GameState>({

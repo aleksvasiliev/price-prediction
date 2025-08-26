@@ -1,0 +1,42 @@
+name: btc-10s-guess
+static_sites:
+  - name: frontend
+    source_dir: apps/web
+    github:
+      repo: aleksvasiliev/price-prediction
+      branch: main
+      deploy_on_push: true
+    build_command: npm run build
+    output_dir: dist
+    environment_slug: node-js
+    envs:
+      - key: NODE_VERSION
+        value: "20"
+      - key: VITE_API_URL
+        value: ${backend.PUBLIC_URL}
+      - key: VITE_WS_URL
+        value: ${backend.PUBLIC_URL}
+    catchall_document: index.html
+
+services:
+  - name: backend
+    source_dir: apps/server
+    github:
+      repo: aleksvasiliev/price-prediction
+      branch: main
+      deploy_on_push: true
+    build_command: npm run build
+    start_command: npm start
+    environment_slug: node-js
+    envs:
+      - key: NODE_VERSION
+        value: "20"
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: "3001"
+    http_port: 3001
+    instance_count: 1
+    instance_size_slug: basic-xxs
+    health_check:
+      http_path: /health

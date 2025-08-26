@@ -8,7 +8,7 @@ import {
   RoundStartEvent,
   RoundResultEvent,
   RoundRecord
-} from '@predictor/shared';
+} from './shared';
 
 export interface Round {
   id: string;
