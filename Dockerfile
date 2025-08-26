@@ -1,20 +1,22 @@
 # Dockerfile для DigitalOcean App Platform
 FROM node:20-alpine
 
-# Устанавливаем pnpm
-RUN corepack enable && corepack prepare pnpm@latest --activate
-
 # Создаем рабочую директорию
 WORKDIR /app
 
-# Копируем package файлы
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+# Копируем package файлы приложений
 COPY apps/web/package.json ./apps/web/
 COPY apps/server/package.json ./apps/server/
-COPY packages/shared/package.json ./packages/shared/
 
-# Устанавливаем зависимости
-RUN pnpm install --frozen-lockfile
+# Устанавливаем зависимости для каждого приложения
+WORKDIR /app/apps/web
+RUN npm install --production=false
+
+WORKDIR /app/apps/server
+RUN npm install --production=false
+
+# Возвращаемся в корень
+WORKDIR /app
 
 # Копируем исходный код
 COPY . .
@@ -22,29 +24,26 @@ COPY . .
 # Подготавливаем shared код
 RUN node scripts/prepare-docker.js
 
-# Собираем shared package
-RUN pnpm --filter @predictor/shared build
-
 # Собираем приложения
-RUN pnpm --filter web build
-RUN pnpm --filter server build
+WORKDIR /app/apps/web
+RUN npm run build
+
+WORKDIR /app/apps/server
+RUN npm run build
 
 # Production стадия
 FROM node:20-alpine AS production
 
-# Устанавливаем pnpm
-RUN corepack enable && corepack prepare pnpm@latest --activate
-
 WORKDIR /app
 
-# Копируем собранные приложения
+# Копируем собранные файлы
 COPY --from=0 /app/apps/web/dist ./frontend/dist
 COPY --from=0 /app/apps/server/dist ./backend/dist
 COPY --from=0 /app/apps/server/package.json ./backend/
 
 # Устанавливаем production зависимости для backend
 WORKDIR /backend
-RUN pnpm install --prod --frozen-lockfile
+RUN npm install --production
 
 # Создаем пользователя
 RUN addgroup -g 1001 -S nodejs && adduser -S nextjs -u 1001
