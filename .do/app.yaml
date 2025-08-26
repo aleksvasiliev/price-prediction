@@ -6,7 +6,7 @@ static_sites:
       repo: aleksvasiliev/price-prediction
       branch: main
       deploy_on_push: true
-    build_command: npm run build
+    build_command: npm install && npm run build
     output_dir: dist
     environment_slug: node-js
     envs:
@@ -25,7 +25,7 @@ services:
       repo: aleksvasiliev/price-prediction
       branch: main
       deploy_on_push: true
-    build_command: npm run build
+    build_command: npm install && npm run build
     start_command: npm start
     environment_slug: node-js
     envs:
