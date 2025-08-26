@@ -1,19 +1,13 @@
 {
   "name": "predictor",
   "version": "1.0.0",
-  "description": "",
+  "description": "BTC 10s Guess - Bitcoin Price Prediction Game",
   "main": "index.js",
   "scripts": {
-    "dev": "concurrently \"pnpm --filter @predictor/shared dev\" \"pnpm --filter web dev\" \"pnpm --filter server dev\"",
-    "build": "pnpm --filter @predictor/shared build && pnpm --filter web build && pnpm --filter server build",
-    "start:web": "pnpm --filter web dev",
-    "start:server": "pnpm --filter server dev"
+    "dev": "echo 'Use individual apps for development'",
+    "build": "echo 'Use individual apps for building'"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "packageManager": "pnpm@10.14.0",
-  "devDependencies": {
-    "concurrently": "^9.2.0"
-  }
+  "keywords": ["bitcoin", "prediction", "game", "web3"],
+  "author": "Aleksei Vasiliev",
+  "license": "ISC"
 }
