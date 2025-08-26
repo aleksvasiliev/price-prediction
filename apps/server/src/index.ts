@@ -11,7 +11,7 @@ import {
   RoundResultEvent,
   ChoiceAckEvent,
   LeaderboardEvent,
-} from './shared';
+} from './shared/index';
 
 const fastify = Fastify({ logger: true });
 

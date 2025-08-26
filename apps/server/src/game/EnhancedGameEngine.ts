@@ -9,7 +9,7 @@ import {
   RoundResultEvent,
   RoundRecord,
   PriceUpdateEvent
-} from './shared';
+} from './shared/index';
 import { BinancePriceService, PriceData } from '../services/BinancePriceService';
 
 export interface Round {

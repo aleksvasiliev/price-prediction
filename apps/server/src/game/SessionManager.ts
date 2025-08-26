@@ -1,5 +1,5 @@
 import { nanoid } from 'nanoid';
-import { PlayerSession } from './shared';
+import { PlayerSession } from './shared/index';
 
 export interface Session {
   id: string;

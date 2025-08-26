@@ -8,7 +8,7 @@ import {
   RoundStartEvent,
   RoundResultEvent,
   RoundRecord
-} from './shared';
+} from './shared/index';
 
 export interface Round {
   id: string;
